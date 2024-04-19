@@ -13,15 +13,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 public class UsersMicroserviceApplication {
 
-   /* @Autowired
+   /*@Autowired
     UserService userService;*/
 
     public static void main(String[] args) {
         SpringApplication.run(UsersMicroserviceApplication.class, args);
     }
 
-   /*
-    @PostConstruct
+
+   /* @PostConstruct
     void init_users() {
 //ajouter les rôles
         userService.addRole(new Role(null,"ADMIN"));
