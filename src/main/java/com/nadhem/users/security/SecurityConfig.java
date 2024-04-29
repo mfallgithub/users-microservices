@@ -21,9 +21,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
-                .authorizeRequests(requests -> requests.requestMatchers("/login").permitAll()
+
+                .authorizeRequests(requests -> requests
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/all").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
-                .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTAuthenticationFilter(authMgr),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTAuthorizationFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Transactional
 @Service
@@ -40,8 +42,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addRoleToUser(String username, String rolename) {
         User user = userRepository.findByUsername(username);
-        Role role= roleRepository.findRoleByRole(rolename);
+        Role role = roleRepository.findRoleByRole(rolename);
         user.getRoles().add(role);
         return user;
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }
