@@ -4,12 +4,16 @@ import com.nadhem.users.entities.Role;
 import com.nadhem.users.entities.User;
 import com.nadhem.users.repos.RoleRepository;
 import com.nadhem.users.repos.UserRepository;
+import com.nadhem.users.service.exceptions.EmailAlreadyExistsException;
+import com.nadhem.users.service.register.RegistrationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Transactional
@@ -50,5 +54,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User registerUser(RegistrationRequest request) {
+
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        if (optionalUser.isPresent())
+            throw new EmailAlreadyExistsException("Email déja existe");
+
+        User newUser = new User();
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        newUser.setEmail(request.getEmail());
+        newUser.setEnabled(false);
+        userRepository.save(newUser);
+        Role role = roleRepository.findRoleByRole("USER");
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        newUser.setRoles(roles);
+        return userRepository.save(newUser);
     }
 }

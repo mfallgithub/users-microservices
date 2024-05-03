@@ -40,7 +40,7 @@ public class SecurityConfig {
                 }))
 
                 .authorizeRequests(requests -> requests
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login","/register/**").permitAll()
                         .requestMatchers("/all").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTAuthenticationFilter(authMgr),
