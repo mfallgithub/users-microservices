@@ -25,4 +25,9 @@ public class UserRestController {
         return userService.registerUser(request);
     }
 
+    @GetMapping("/verifyEmail/{token}")
+    public User verifyEmail(@PathVariable("token") String token){
+        return userService.validateToken(token);
+    }
+
 }
